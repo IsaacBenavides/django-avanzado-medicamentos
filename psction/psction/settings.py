@@ -11,18 +11,27 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 import os
 from pathlib import Path
+import environ
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv('PSC_DEBUG') == '1'
+env = environ.Env(
+    # set casting, default value
+    DEBUG=(bool, False)
+)
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
+
+# SECURITY WARNING: don't run with debug turned on in production!
+DEBUG = env('PSC_DEBUG') == "1"
+
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv('PSC_SECRET_KEY')
+SECRET_KEY = env('SECRET_KEY')
 
 ALLOWED_HOSTS = ['*'] if not DEBUG else []
 
@@ -139,19 +148,19 @@ EXTERNAL_PHYSICIAN = 'PHYSICIAN'
 EXTERNAL_SERVICES = {
     EXTERNAL_CLINIC: {
         'base_url': 'https://5f71da6964a3720016e60ff8.mockapi.io/v1',
-        'auth_token': os.getenv('CLINIC_TOKEN'),
+        'auth_token': env('CLINIC_TOKEN'),
     },
     EXTERNAL_PATIENT: {
         'base_url': 'https://5f71da6964a3720016e60ff8.mockapi.io/v1',
-        'auth_token': os.getenv('PATIENT_TOKEN'),
+        'auth_token': env('PATIENT_TOKEN'),
     },
     EXTERNAL_PHYSICIAN: {
         'base_url': 'https://5f71da6964a3720016e60ff8.mockapi.io/v1',
-        'auth_token': os.getenv('PHYSICIAN_TOKEN'),
+        'auth_token': env('PHYSICIAN_TOKEN'),
     },
     EXTERNAL_METRIC: {
         'base_url': 'https://5f71da6964a3720016e60ff8.mockapi.io/v1',
-        'auth_token': os.getenv('METRIC_TOKEN'),
+        'auth_token': env('METRIC_TOKEN'),
     },
 }
 
